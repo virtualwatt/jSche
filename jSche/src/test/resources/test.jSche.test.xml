@@ -1,0 +1,9 @@
+<jScheConfigs>
+	<timeZone>PST</timeZone>
+	<jScheConfig>
+		<timeZone>EET</timeZone>
+		<time>20:13</time>
+		<time>20:14</time>
+		<testEventClassTest/>
+	</jScheConfig>
+</jScheConfigs>

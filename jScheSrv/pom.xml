@@ -1,0 +1,199 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>vvat.jsche</groupId>
+	<artifactId>jsche-srv</artifactId>
+	<version>1.2.0</version>
+	<packaging>jar</packaging>
+
+	<name>jScheSrv</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>vvat.jsche.srv.JScheSrv</mainClass>
+							<packageName>vvat.jsche.srv</packageName>
+							<addClasspath>true</addClasspath>
+							<!-- <classpathPrefix>../lib</classpathPrefix> -->
+						</manifest>
+						<manifestEntries>
+							<!-- <Class-Path>../lib</Class-Path> -->
+							<Class-Path>.</Class-Path>
+						</manifestEntries>
+					</archive>
+					<excludes>
+						<exclude>jSche.properties</exclude>
+						<exclude>log4j.xml</exclude>
+						<exclude>log4j_con.xml</exclude>
+						<exclude>eventClassesHolder.xml</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeScope>compile</includeScope>
+							<includeScope>runtime</includeScope>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<delete dir="${project.basedir}/compilation" includeemptydirs="true" />
+								<mkdir dir="${project.basedir}/compilation/jSche/bin" />
+								<mkdir dir="${project.basedir}/compilation/jSche/logs" />
+								<mkdir dir="${project.basedir}/compilation/jSche/lib" />
+								<mkdir dir="${project.basedir}/compilation/jSche/jScheConfigs" />
+
+								<copy todir="${project.basedir}/compilation/jSche/lib">
+									<fileset dir="${project.build.directory}/lib" includes="**/*" />
+								</copy>
+
+								<copy todir="${project.basedir}/compilation/jSche/lib">
+									<fileset dir="${project.basedir}/src/main/resources">
+										<exclude name="**/.dm"/>
+										<exclude name=".dm/*"/>
+									</fileset>
+								</copy>
+
+								<copy todir="${project.basedir}/compilation/jSche/lib">
+									<fileset dir="${project.build.directory}" includes="**/${project.build.finalName}.jar" />
+								</copy>
+
+								<copy todir="${project.basedir}/compilation/jSche/bin">
+									<fileset dir="${project.basedir}/auxiliary">
+										<exclude name="**/.dm"/>
+										<exclude name=".dm/*"/>
+									</fileset>
+								</copy>
+
+								<copy todir="${project.basedir}/compilation/jSche/jScheConfigs">
+									<fileset dir="${project.basedir}/exampleConfigs">
+										<exclude name="**/.dm"/>
+										<exclude name=".dm/*"/>
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<configuration>
+							<target>
+								<delete dir="${project.basedir}/compilation" includeemptydirs="true" />
+								<delete dir="${project.basedir}/target" includeemptydirs="true" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>vvat.jsche</groupId>
+			<artifactId>jsche-core</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>vvat.jsche.event</groupId>
+			<artifactId>jsche-event-javaapprunner</artifactId>
+			<version>1.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>vvat.jsche.event</groupId>
+			<artifactId>jsche-event-procexecutor</artifactId>
+			<version>1.1.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>vvat.jsche.event</groupId>
+			<artifactId>jsche-event-httpreplay</artifactId>
+			<version>1.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>vvat.jsche.event</groupId>
+			<artifactId>jsche-event-foldercleanup</artifactId>
+			<version>1.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+
+	<url>https://sites.google.com/site/jschesimplescheduler/</url>
+	<description>jSche Simple Scheduler is the scheduler utility that can act as the Windows Service processing schedule setup &quot;on the fly&quot; - you may edit the user-friendly settings in the XML file and the service will reschedule events immediately when you save the updated configuration without of service restart.</description>
+	<organization>
+		<name>Vitaliy Tkachenko</name>
+		<url>https://plus.google.com/+VitaliyTkachenko/about</url>
+	</organization>
+	<scm>
+		<connection>scm:svn:http://j-sche.googlecode.com/svn/trunk/jScheSrv</connection>
+		<developerConnection>scm:svn:https://j-sche.googlecode.com/svn/trunk/jScheSrv</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://code.google.com/p/j-sche/source/browse/#svn%2Ftrunk%2FjScheSrv</url>
+	</scm>
+	<issueManagement>
+		<url>https://code.google.com/p/j-sche/issues/list</url>
+		<system>Google Code issues</system>
+	</issueManagement>
+</project>

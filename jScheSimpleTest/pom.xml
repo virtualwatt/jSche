@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>vvat.jsche.test</groupId>
+	<artifactId>jsche-simpletest</artifactId>
+	<version>1.1.0</version>
+	<packaging>jar</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>vvat.jsche.simpletest.JScheSimpleTest</mainClass>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeScope>compile</includeScope>
+							<outputDirectory>${project.build.directory}/compilation</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<copy todir="${project.build.directory}/compilation">
+									<fileset dir="${project.build.directory}" includes="${project.build.finalName}.jar" />
+								</copy>
+								<copy todir="${project.build.directory}/compilation">
+									<fileset dir="${project.basedir}/auxiliary">
+										<exclude name="**/.dm"/>
+										<exclude name=".dm/*"/>
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>vvat.jsche</groupId>
+			<artifactId>jsche-core</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>vvat.jsche.test</groupId>
+			<artifactId>jsche-event-testevent</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+	</dependencies>
+
+	<url>https://sites.google.com/site/jschesimplescheduler/</url>
+	<organization>
+		<name>Vitaliy Tkachenko</name>
+		<url>https://plus.google.com/+VitaliyTkachenko/about</url>
+	</organization>
+	<scm>
+		<tag>HEAD</tag>
+		<url>https://code.google.com/p/j-sche/source/browse/#svn%2Ftrunk%2FjScheSimpleTest</url>
+		<connection>scm:svn:http://j-sche.googlecode.com/svn/trunk/jScheSimpleTest</connection>
+		<developerConnection>scm:svn:https://j-sche.googlecode.com/svn/trunk/jScheSimpleTest</developerConnection>
+	</scm>
+	<name>jScheSimpleTest</name>
+	<issueManagement>
+		<system>Google Code issues</system>
+		<url>https://code.google.com/p/j-sche/issues/list</url>
+	</issueManagement>
+</project>

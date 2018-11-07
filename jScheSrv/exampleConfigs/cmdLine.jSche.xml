@@ -1,0 +1,46 @@
+<jScheConfigs>
+
+	<!-- Time zone used to specify times below -->
+	<!-- The same setting can be used inside each jScheConfig as well and will be used instead of this one in this case -->
+	<!-- If it is omitted in both settings the one specified in jSche.properties will be used (by default specifies to use local time zone) -->
+	<timeZone>PST</timeZone>
+
+	<!-- Weekly configurations to run each business day on specified times -->
+	<!-- It specifies that the event will be fired each business day twice at 11:59 am PST and 11:59 pm PST -->
+	<!-- If there are several configurations set for the same event it is better to define event reference to use the only event instance -->
+	<jScheConfig>
+		<dayOfWeek>MONDAY</dayOfWeek>
+		<dayOfWeek>TUESDAY</dayOfWeek>
+		<dayOfWeek>WEDNESDAY</dayOfWeek>
+		<dayOfWeek>THURSDAY</dayOfWeek>
+		<dayOfWeek>FRIDAY</dayOfWeek>
+		<time>11:59</time>
+		<time>23:59</time>
+		<eventRef id="dir"/>
+	</jScheConfig>
+
+	<!-- Daily configurations to run at specified times -->
+	<!-- It specifies that the event will be fired each day at 8 am EET and 1 pm EET -->
+	<!-- Time zone specified here overrides time zone setting for this configuration the setting made for all configuration on the top -->
+	<jScheConfig>
+		<timeZone>EET</timeZone>
+		<time>09:36</time>
+		<time>09:37:30</time>
+		<eventRef id="dir"/>
+	</jScheConfig>
+
+	<!-- If there is the only configuration with such event it is probably better to define it directly in this configuration -->
+	<jScheConfig>
+		<timeZone>EET</timeZone>
+		<time>09:36</time>
+		<time>09:37:30</time>
+		<processExecutor>
+			<cmdLine>cmd /c cd</cmdLine>
+		</processExecutor>
+	</jScheConfig>
+
+	<!-- For each event references defined in the configurations below event must be defined with corresponding IDs -->
+	<processExecutor id="dir">
+		<cmdLine>cmd /c dir</cmdLine>
+	</processExecutor>
+</jScheConfigs>

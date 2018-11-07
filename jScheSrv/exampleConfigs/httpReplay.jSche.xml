@@ -1,0 +1,24 @@
+<jScheConfigs>
+
+	<!-- Time zone used to specify times below -->
+	<!-- The same setting can be used inside each jScheConfig as well and will be used instead of this one in this case -->
+	<!-- If it is omitted in both settings the one specified in jSche.properties will be used (by default specifies to use local time zone) -->
+	<timeZone>EET</timeZone>
+
+	<!-- Weekly configurations to run each business day on specified times -->
+	<!-- It specifies that the event will be fired each business day twice at 11:59 am PST and 11:59 pm PST -->
+	<!-- If there are several configurations set for the same event it is better to define event reference to use the only event instance -->
+	<jScheConfig>
+		<dayOfWeek>MONDAY</dayOfWeek>
+		<dayOfWeek>TUESDAY</dayOfWeek>
+		<dayOfWeek>WEDNESDAY</dayOfWeek>
+		<dayOfWeek>THURSDAY</dayOfWeek>
+		<dayOfWeek>FRIDAY</dayOfWeek>
+		<time>09:36</time>
+		<time>09:37</time>
+		<time>20:35</time>
+		<httpReplay>
+			<requestFile>mashupswiki.hr</requestFile>
+		</httpReplay>
+	</jScheConfig>
+</jScheConfigs>

@@ -1,0 +1,12 @@
+<jScheConfigs>
+	<!-- To test the request NOW just resave this file -->
+	<!-- If no time is specified then the event is fired just once immediately -->
+	<jScheConfig>
+		<javaAppRunner>
+			<startClass>TestArguments</startClass>
+			<argument>First argument</argument>
+			<argument>Second argument</argument>
+			<argument>Third argument</argument>
+		</javaAppRunner>
+	</jScheConfig>
+</jScheConfigs>

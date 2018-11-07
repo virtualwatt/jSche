@@ -1,0 +1,16 @@
+<jScheConfigs>
+	<!-- To test the request NOW just resave this file -->
+	<!-- If no time is specified then the event is fired just once immediately -->
+	<jScheConfig>
+		<processExecutor>
+			<cmdLinePart>cmd</cmdLinePart>
+			<cmdLinePart>/c</cmdLinePart>
+			<cmdLinePart>dir</cmdLinePart>
+		</processExecutor>
+	</jScheConfig>
+	<jScheConfig>
+		<processExecutor>
+			<cmdLine>cmd /c echo Hello, World!</cmdLine>
+		</processExecutor>
+	</jScheConfig>
+</jScheConfigs>

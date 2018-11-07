@@ -1,0 +1,14 @@
+<jScheConfigs>
+
+	<timeZone>EET</timeZone>
+
+	<jScheConfig>
+		<time>6:00</time>
+		<folderCleanup>
+			<folder>C:\Temp</folder>
+			<includeSubfolders>true</includeSubfolders>
+			<maximumSize in="MB">10</maximumSize>
+		</folderCleanup>
+	</jScheConfig>
+
+</jScheConfigs>

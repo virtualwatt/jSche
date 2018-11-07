@@ -1,0 +1,7 @@
+<jScheConfigs>
+	<!-- To test the request NOW just resave this file -->
+	<!-- If no time is specified then the request is sent just once immediately -->
+	<jScheConfig>
+		<testEventClass/>
+	</jScheConfig>
+</jScheConfigs>

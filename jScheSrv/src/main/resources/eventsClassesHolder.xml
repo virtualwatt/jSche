@@ -1,0 +1,6 @@
+<eventsClasses>
+	<eventClass>vvat.jsche.event.javaapp.JavaAppRunner</eventClass>
+	<eventClass>vvat.jsche.event.procexec.ProcessExecutor</eventClass>
+	<eventClass>vvat.jsche.event.httpreplay.HttpReplay</eventClass>
+	<eventClass>vvat.jsche.event.fldclean.FolderCleanup</eventClass>
+</eventsClasses>

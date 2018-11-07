@@ -1,0 +1,18 @@
+jSche Simple Scheduler versions history
+=======================================
+
+
+1.2.0
+	Seconds can be specified in the schedule time
+	<cmdLinePart>s are used for the "processExecutor" plugin to specify command line by parts
+	In case of executor launch problem everything else running further with appropriate log messages
+
+1.1.1
+	Events elements order for JAXB marshalling added
+
+1.1.0
+	Event can be referenced
+	Small fixes
+
+1.0.0
+	Initial stable edition
