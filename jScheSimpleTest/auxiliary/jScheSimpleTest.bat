@@ -4,14 +4,6 @@
 @echo off
 setlocal
 
-if "%JAVA_HOME%"=="" (
-	echo Install JRE 7 or JDK 7 and set JAVA_HOME
-	exit /b 1
-)
-path=%JAVA_HOME%\bin
-
-echo JAVA_HOME=%JAVA_HOME%
-cd
 echo %time%
 echo .
 

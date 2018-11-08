@@ -13,7 +13,7 @@
 		<dayOfWeek>FRIDAY</dayOfWeek>
 		<time>11:59</time>
 		<time>23:59</time>
-		<testEventClass/>
+		<jScheTestEvent/>
 	</jScheConfig>
 	<!-- Daily configurations to run at specified times -->
 	<!-- It specifies that the request stored in the "mashupswiki.hr" file will be sent each day at 8 am EET and 1 pm EET -->
@@ -22,6 +22,6 @@
 		<timeZone>EET</timeZone>
 		<time>09:36</time>
 		<time>09:37</time>
-		<testEventClass/>
+		<jScheTestEvent/>
 	</jScheConfig>
 </jScheConfigs>
