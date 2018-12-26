@@ -4,7 +4,7 @@
 
 	<groupId>vvat.jsche.event</groupId>
 	<artifactId>jsche-event-httpreplay</artifactId>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>jScheJavaAppEvent</name>

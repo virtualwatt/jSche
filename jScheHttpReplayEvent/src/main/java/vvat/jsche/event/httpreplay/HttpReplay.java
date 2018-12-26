@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,13 +32,9 @@ public class HttpReplay extends JScheEvent
 {
 	private static final Logger log = Logger.getLogger(HttpReplay.class);
 	
-
 	private String host;
-
 	private int port;
-
 	private String requestFile;
-	
 	private static String defaultDir;
 	
 	static {
@@ -50,21 +48,33 @@ public class HttpReplay extends JScheEvent
 	 * For single execution instance
 	 * @param args
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws IOException, InterruptedException
     {
-    	if (args.length == 0 || args.length == 2 || args.length > 3) {
-    		System.out.println("Arguments: -service | (<HTTP request file> [<host> <port>])");
+    	if (args.length == 0 || args.length > 4) {
+    		System.out.println("Arguments: [-batch(<total requests>[,<requests in batch>[,<delay between batches>]])] <HTTP request file> [<host> <port>]");
     		return;
     	}
-    	String requestFile = args[0];
+    	String arg0 = args[0];
+    	int argInc = arg0.startsWith("-batch(") ? 1 : 0;
+    	String requestFile = args[0 + argInc];
     	boolean result;
-    	if (args.length == 3) {
-    		String host = args[1];
-    		int port = Integer.parseInt(args[2]);
+    	String host = null;
+    	int port = 0;
+    	if (args.length == 3 + argInc) {
+    		host = args[1 + argInc];
+    		port = Integer.parseInt(args[2 + argInc]);
+    	}
+    	if (argInc == 0)
     		result = performRequest(requestFile, host, port);
-    	} else
-    		result = performRequest(requestFile);
+    	else {
+    		String[] batchParams = arg0.substring("-batch(".length(), arg0.length() - 1).split(",");
+    		int requestsCount = Integer.parseInt(batchParams[0]);
+    		int batchSize = batchParams.length > 1 ? Integer.parseInt(batchParams[1]) : requestsCount;
+    		long batchInterval = batchParams.length > 2 ? Long.parseLong(batchParams[2]) : 0;
+    		result = performBatchRequests(requestFile, host, port, false, requestsCount, batchSize, batchInterval);
+    	}
     	System.out.println(result ? "Success." : "Failure!");
     }
 
@@ -135,6 +145,8 @@ public class HttpReplay extends JScheEvent
 		try {
 			String firstLine = bufferedReader.readLine();
 			log.info("Response: " + firstLine);
+			if (firstLine == null)
+				return false;
 			int retCodeGrp = (int)firstLine.charAt(firstLine.indexOf(' ') + 1) - (int)'0';
 			return retCodeGrp == 2 || retCodeGrp == 3;
 		} catch (Exception e) {
@@ -202,8 +214,9 @@ public class HttpReplay extends JScheEvent
 		return requestFile + " HTTP request executor";
 	}
 
-	public static void performBatchRequests(String requestFile, String host, int port, boolean sslOn, int requestsCount, int batchSize, long batchInterval) throws IOException, InterruptedException {
+	public static boolean performBatchRequests(String requestFile, String host, int port, boolean sslOn, int requestsCount, int batchSize, long batchInterval) throws IOException, InterruptedException {
 		ByteArrayData httpRequest = new FileSource(requestFile).getFileData();
+		boolean result = true;
 		long startTime = System.currentTimeMillis();
 		while (requestsCount > 0) {
 			log.info("____Request batch has started.");
@@ -213,16 +226,24 @@ public class HttpReplay extends JScheEvent
 				batchSize = requestsCount;
 			}
 			ExecutorService executor = Executors.newFixedThreadPool(batchSize);
+			List<RequestThread> batch = new ArrayList<>(batchSize);
 			for (int i = 0; i < batchSize; i++) {
-				executor.submit(new RequestThread(httpRequest, host, port, sslOn, latch));
+				RequestThread requestThread = new RequestThread(httpRequest, host, port, sslOn, latch);
+				executor.submit(requestThread);
+				batch.add(requestThread);
 			}
 			executor.shutdown();
 			latch.countDown();
 			executor.awaitTermination(10, TimeUnit.MINUTES);
 			requestsCount -= batchSize;
-			log.info("____Request batch has taken [" + (System.currentTimeMillis() - batchStartTime) + "] ms.");
+			log.info("____ Requests batch has taken [" + (System.currentTimeMillis() - batchStartTime) + "] ms.");
 			Thread.sleep(batchInterval);
+			for (RequestThread requestThread: batch) {
+				if (!requestThread.getResult())
+					result = false;
+			}
 		}
-		log.info("****Request batch has taken [" + (System.currentTimeMillis() - startTime) + "] ms.");
+		log.info("**** Requests batches has taken [" + (System.currentTimeMillis() - startTime) + "] ms.");
+		return result;
 	}
 }

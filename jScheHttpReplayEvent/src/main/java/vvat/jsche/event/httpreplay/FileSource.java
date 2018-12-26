@@ -16,9 +16,7 @@ import java.io.InputStream;
 public class FileSource {
 
 	private String fileName;
-	
 	private String folderName;
-
 	private ByteArrayData fileData;
 	
 	public FileSource() {;}
