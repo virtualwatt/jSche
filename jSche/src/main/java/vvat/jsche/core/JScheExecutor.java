@@ -66,7 +66,7 @@ class JScheExecutor implements Runnable {
 		}
 		long now = System.currentTimeMillis();
 		long timeOfNextDay = ConfigCalculator.timeOfNextDay(now, dayOfWeek, time, timeZone);
-		boolean eachDay = dayOfWeek == DayOfWeek.NULL;
+		boolean eachDay = dayOfWeek == null || dayOfWeek == DayOfWeek.NULL;
 		ScheduledFuture<?> scheduledFuture = scheduleService.scheduleAtFixedRate(
 				this,
 				timeOfNextDay - now,
@@ -84,6 +84,16 @@ class JScheExecutor implements Runnable {
 		log.info(sb.toString());
 	}
 
+
+	void addExecutor(String time) {
+		long t = ConfigCalculator.time2millis(time);
+		ScheduledFuture<?> scheduledFuture = scheduleService.scheduleAtFixedRate(this, t, t, TimeUnit.MILLISECONDS);
+		scheduledFutures.add(scheduledFuture);
+		StringBuilder sb = new StringBuilder();
+		sb.append('{').append(event.toString()).append("} scheduled each ").append(time).append(" since now");
+		log.info(sb.toString());
+	}
+	
 	@Override
 	public void run() {
 		try {

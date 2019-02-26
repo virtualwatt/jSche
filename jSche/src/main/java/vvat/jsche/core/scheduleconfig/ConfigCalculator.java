@@ -30,9 +30,10 @@ public class ConfigCalculator {
 	
 	private static final Logger log = Logger.getLogger(ConfigCalculator.class);
 	
-	public static final long MS_IN_DAY = 24 * 60 * 60 * 1000;
-	public static final long MS_IN_WEEK = MS_IN_DAY * 7;
-	private static final long TOO_CLOSE_TIME_BUFFER = 1000; // 1 second to next event is too close
+	public static final long MS_IN_MINUTE = 60L * 1000L;
+	public static final long MS_IN_DAY = 24L * 60L * 60L * 1000L;
+	public static final long MS_IN_WEEK = MS_IN_DAY * 7L;
+	private static final long TOO_CLOSE_TIME_BUFFER = 1000L; // 1 second to next event is too close
 
 	/**
 	 * Locate date/time in milliseconds for next dayOfWeek after date/time represented by afterTime milliseconds at specified time.
@@ -48,6 +49,9 @@ public class ConfigCalculator {
 	}
 
 	private static int mapDayOfWeek4Calendar(DayOfWeek dayOfWeek) {
+		if (dayOfWeek == null)
+			return 0;
+		
 		switch (dayOfWeek) {
 		case SUNDAY:
 			return Calendar.SUNDAY;
@@ -104,7 +108,7 @@ public class ConfigCalculator {
 
 	private static final Pattern timePtrn = Pattern.compile("^(\\d+):(\\d+)(?::(\\d+))?$");
 
-	private static long time2millis(String time) {
+	public static long time2millis(String time) {
 		Matcher matcher = timePtrn.matcher(time);
 		if (matcher.find()) {
 			try {

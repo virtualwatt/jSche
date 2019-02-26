@@ -82,7 +82,7 @@ class Schedule {
 				}
 			}
 			if (!jScheEvent.assertValid()) {
-				log.error("Skipping invalid event setup");
+				log.error("Skipping invalid event configuration");
 				continue;
 			}
 			JScheExecutor jScheExecutor = new JScheExecutor(jScheEvent);
@@ -101,14 +101,15 @@ class Schedule {
 						jScheExecutor.cancelExecutors();
 						continue;
 					}
-					// daily configuration
+					// periodical configuration
 					for (String time: times) {
-						jScheExecutor.addExecutor(DayOfWeek.NULL, time, timeZone);
+						jScheExecutor.addExecutor(time);
 					}
 				} else {
 					// weekly configuration
 					for (DayOfWeek dayOfWeek: daysOfWeek) {
 						for (String time: times) {
+							// if daysOfWeek==null - daily configuration
 							jScheExecutor.addExecutor(dayOfWeek, time, timeZone);
 						}
 					}
