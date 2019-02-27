@@ -4,7 +4,7 @@
 	<!-- If it is omitted in both settings the one specified in jSche.properties will be used (by default specifies to use local time zone) -->
 	<timeZone>PST</timeZone>
 	<!-- Weekly configurations to run each business day on specified times -->
-	<!-- It specifies that the request stored in the "mashupswiki.hr" file will be sent each business day twice at 11:59 am PST and 11:59 pm PST -->
+	<!-- It specifies that the test event (reporting the configuration folder location) will be fired each business day twice at 11:59 am PST and 11:59 pm PST -->
 	<jScheConfig>
 		<dayOfWeek>MONDAY</dayOfWeek>
 		<dayOfWeek>TUESDAY</dayOfWeek>
@@ -16,12 +16,13 @@
 		<jScheTestEvent/>
 	</jScheConfig>
 	<!-- Daily configurations to run at specified times -->
-	<!-- It specifies that the request stored in the "mashupswiki.hr" file will be sent each day at 8 am EET and 1 pm EET -->
+	<!-- It specifies that the test event will be fired each day at 8 am EET and 1 pm EET -->
 	<!-- Time zone specified here overrides time zone setting for this configuration the setting made for all configuration on the top -->
 	<jScheConfig>
 		<timeZone>EET</timeZone>
-		<time>09:36</time>
-		<time>09:37</time>
+		<dayOfWeek/>
+		<time>08:00</time>
+		<time>13:00</time>
 		<jScheTestEvent/>
 	</jScheConfig>
 </jScheConfigs>

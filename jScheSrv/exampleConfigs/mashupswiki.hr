@@ -1,9 +1,0 @@
-GET http://mashupswiki/ HTTP/1.1
-Host: mashupswiki
-Connection: keep-alive
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36
-Accept-Encoding: gzip,deflate,sdch
-Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4,uk;q=0.2
-Cookie: PHPSESSID=f224234eb1dd47c3f6f840e59d57962b; authtoken=229_635376649275284860_27330613a2b90bbe6c724295d8482674
-

@@ -24,14 +24,16 @@
 	<!-- Time zone specified here overrides time zone setting for this configuration the setting made for all configuration on the top -->
 	<jScheConfig>
 		<timeZone>EET</timeZone>
-		<time>09:36</time>
-		<time>09:37:30</time>
+		<dayOfWeek/>
+		<time>08:00</time>
+		<time>13:00</time>
 		<eventRef id="dir"/>
 	</jScheConfig>
 
 	<!-- If there is the only configuration with such event it is probably better to define it directly in this configuration -->
 	<jScheConfig>
 		<timeZone>EET</timeZone>
+		<dayOfWeek/>
 		<time>09:36</time>
 		<time>09:37:30</time>
 		<processExecutor>

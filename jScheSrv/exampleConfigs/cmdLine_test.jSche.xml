@@ -1,5 +1,5 @@
 <jScheConfigs>
-	<!-- To test the request NOW just resave this file -->
+	<!-- To test the event NOW just resave this file -->
 	<!-- If no time is specified then the event is fired just once immediately -->
 	<jScheConfig>
 		<processExecutor>

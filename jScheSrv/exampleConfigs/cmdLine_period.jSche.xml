@@ -1,0 +1,9 @@
+<jScheConfigs>
+	<!-- Configuration with time only specification fires event each specified time (each hour in this example) -->
+	<jScheConfig>
+		<time>01:00</time>
+		<processExecutor>
+			<cmdLine>cmd /c echo Hello, World!</cmdLine>
+		</processExecutor>
+	</jScheConfig>
+</jScheConfigs>
