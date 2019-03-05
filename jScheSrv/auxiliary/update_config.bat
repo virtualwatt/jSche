@@ -11,6 +11,8 @@ set JVM_X_MINMEMSIZE=4M
 set JVM_X_MAXMEMSIZE=256M
 
 set USER_OPTIONS=-DconfigDir=%APP_HOME%\jScheConfigs#-DlogsDir=%APP_HOME%\logs
+rem # For full HTTP response logging
+rem set USER_OPTIONS=%USER_OPTIONS%#-DdetailedHttpResponse
 
 ::--------------------------
 rem # Applying memory settings

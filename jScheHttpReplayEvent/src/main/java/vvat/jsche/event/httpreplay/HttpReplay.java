@@ -75,7 +75,10 @@ public class HttpReplay extends JScheEvent
     		long batchInterval = batchParams.length > 2 ? Long.parseLong(batchParams[2]) : 0;
     		result = performBatchRequests(requestFile, host, port, false, requestsCount, batchSize, batchInterval);
     	}
-    	System.out.println(result ? "Success." : "Failure!");
+    	if (result)
+    		log.info("Success.");
+   		else
+       		log.error("Failure!");
     }
 
 	private static boolean performRequest(String requestFile) throws IOException {
@@ -139,6 +142,13 @@ public class HttpReplay extends JScheEvent
 			}
 		}
 	}
+	
+	private static enum BodyTransMethod {
+		UNKNOWN, CONTENT_LENGTH, CHUNKED
+	}
+	private static final Pattern patTransferEncoding = Pattern.compile("^Transfer-Encoding:\\s*(\\S+?)\\s*$");
+	private static final Pattern patContentLength = Pattern.compile("^Content-Length:\\s*(\\S+?)\\s*$");
+	private static final int defaultChunkedBufLen = 65536;
 
 	private static boolean readResponse(InputStream inStream) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream));
@@ -147,6 +157,60 @@ public class HttpReplay extends JScheEvent
 			log.info("Response: " + firstLine);
 			if (firstLine == null)
 				return false;
+			if (System.getProperty("detailedHttpResponse") != null) {
+				String line = null;
+				StringBuilder sb = new StringBuilder();
+				try {
+					BodyTransMethod bodyTransMethod = BodyTransMethod.UNKNOWN;
+					int len = 0;
+					sb.append("Response details:\n=== Response headers ===\n");
+					while (!(line = bufferedReader.readLine()).isEmpty()) {
+						if (bodyTransMethod == BodyTransMethod.UNKNOWN) {
+							Matcher m;
+							if ((m = patContentLength.matcher(line)).find()) {
+								bodyTransMethod = BodyTransMethod.CONTENT_LENGTH;
+								len = Integer.parseInt(m.group(1));
+							} else if ((m = patTransferEncoding.matcher(line)).find()) {
+								if ("chunked".equals(m.group(1)))
+									bodyTransMethod = BodyTransMethod.CHUNKED;
+								else
+									log.error("Unrecognized " + line);
+							}
+						}
+						sb.append(line).append('\n');
+					}
+					char[] cbuf;
+					sb.append("=== Response body ===\n");
+					if (bodyTransMethod == BodyTransMethod.CONTENT_LENGTH) {
+						cbuf = new char[len];
+						bufferedReader.read(cbuf, 0, len);
+						sb.append(cbuf);
+					} else if (bodyTransMethod == BodyTransMethod.CHUNKED) {
+						cbuf = new char[defaultChunkedBufLen];
+						while ((len = Integer.parseInt((line = bufferedReader.readLine()), 16)) > 0) {
+							if (len > cbuf.length)
+								cbuf = new char[len];
+							int read = 0;
+							while (len > read) {
+								int left = len - read;
+								read += bufferedReader.read(cbuf, read, left);
+							}
+							line = bufferedReader.readLine(); // chunked block CRLF postfix
+							sb.append(cbuf, 0, len);
+						}
+					} else {
+						sb.append("=== WARN: Unknown body length, reading until the end of the stream...\n");
+						while ((line = bufferedReader.readLine()) != null)
+							sb.append(line).append('\n');
+					}
+					log.info(sb);
+				} catch (Exception e) {
+					log.error("Exception occurred collecting the full HTTP response, last buffer and line follows:");
+					log.error(sb);
+					log.error(line);
+					throw e;
+				}
+			}
 			int retCodeGrp = (int)firstLine.charAt(firstLine.indexOf(' ') + 1) - (int)'0';
 			return retCodeGrp == 2 || retCodeGrp == 3;
 		} catch (Exception e) {

@@ -56,16 +56,16 @@
 	<url>https://sites.google.com/site/jschesimplescheduler/</url>
 	<organization>
 		<name>Vitaliy Tkachenko</name>
-		<url>https://plus.google.com/+VitaliyTkachenko/about</url>
+		<url>https://profiles.google.com/VirtualVAT</url>
 	</organization>
 	<scm>
+		<connection>scm:git:https://github.com/virtualwatt/jSche</connection>
+		<developerConnection>scm:git:https://github.com/virtualwatt/jSche</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://code.google.com/p/j-sche/source/browse/#svn%2Ftrunk%2FjScheTestEvent</url>
-		<connection>scm:svn:http://j-sche.googlecode.com/svn/trunk/jScheTestEvent</connection>
-		<developerConnection>scm:svn:https://j-sche.googlecode.com/svn/trunk/jScheTestEvent</developerConnection>
+		<url>https://github.com/virtualwatt/jSche</url>
 	</scm>
 	<issueManagement>
-		<system>Google Code issues</system>
-		<url>https://code.google.com/p/j-sche/issues/list</url>
+		<url>https://groups.google.com/forum/#!forum/j-sche</url>
+		<system>jSche forum</system>
 	</issueManagement>
 </project>
