@@ -6,4 +6,4 @@
 :: Optional file: log4j_con.xml
 :: Define detailedHttpResponse to log full HTTP response
 
-java -classpath "%~dp0*" -DdetailedHttpResponse -Dlog4j.configuration=file:/%~dp0log4j_con.xml vvat.jsche.event.httpreplay.HttpReplay %*
+java -classpath "%~dp0*" -DdetailedHttpResponse "-Dlog4j.configuration=file:/%~dp0log4j_con.xml" vvat.jsche.event.httpreplay.HttpReplay %*
