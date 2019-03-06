@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -160,6 +161,7 @@ public class HttpReplay extends JScheEvent
 			if (System.getProperty("detailedHttpResponse") != null) {
 				String line = null;
 				StringBuilder sb = new StringBuilder();
+				char[] cbuf = null;
 				try {
 					BodyTransMethod bodyTransMethod = BodyTransMethod.UNKNOWN;
 					int len = 0;
@@ -179,22 +181,17 @@ public class HttpReplay extends JScheEvent
 						}
 						sb.append(line).append('\n');
 					}
-					char[] cbuf;
 					sb.append("=== Response body ===\n");
 					if (bodyTransMethod == BodyTransMethod.CONTENT_LENGTH) {
 						cbuf = new char[len];
-						bufferedReader.read(cbuf, 0, len);
+						readChars(bufferedReader, cbuf, len);
 						sb.append(cbuf);
 					} else if (bodyTransMethod == BodyTransMethod.CHUNKED) {
 						cbuf = new char[defaultChunkedBufLen];
 						while ((len = Integer.parseInt((line = bufferedReader.readLine()), 16)) > 0) {
 							if (len > cbuf.length)
 								cbuf = new char[len];
-							int read = 0;
-							while (len > read) {
-								int left = len - read;
-								read += bufferedReader.read(cbuf, read, left);
-							}
+							readChars(bufferedReader, cbuf, len);
 							line = bufferedReader.readLine(); // chunked block CRLF postfix
 							sb.append(cbuf, 0, len);
 						}
@@ -205,9 +202,10 @@ public class HttpReplay extends JScheEvent
 					}
 					log.info(sb);
 				} catch (Exception e) {
-					log.error("Exception occurred collecting the full HTTP response, last buffer and line follows:");
+					log.error("Exception occurred collecting the full HTTP response, last buffer, line and subbuf follows:");
 					log.error(sb);
 					log.error(line);
+					log.error(cbuf);
 					throw e;
 				}
 			}
@@ -216,6 +214,19 @@ public class HttpReplay extends JScheEvent
 		} catch (Exception e) {
 			log.error("Error reading response", e);
 			return false;
+		}
+	}
+
+	private static void readChars(BufferedReader bufferedReader, char[] charsBuf, int charsNum) throws IOException {
+		int read = 0;
+		while (charsNum > read) {
+			int left = charsNum - read;
+			int readNow = bufferedReader.read(charsBuf, read, left);
+			if (readNow < 0) {
+				Arrays.fill(charsBuf, read, left, '\0');
+				throw new IOException("Unexpected end of stream");
+			}
+			read += readNow;
 		}
 	}
 
