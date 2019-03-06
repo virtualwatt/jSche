@@ -1,4 +1,5 @@
-:: Run HTTP requests from console; usage: httpReplay.bat <HTTP request file> [<host> <port>]
+:: Run HTTP requests from console. Usage:
+::  httpReplay.bat [-batch(<total requests>[,<requests in batch>[,<delay between batches>]])] <HTTP request file> [<host> <port>]
 :: Put this file to the same folder where jsche-event-httpreplay-X.X.X.jar resides (jSche\lib)
 :: If you give to request snapshot files same extension (e.g. .hr) setup windows association to this batch file
 ::  to run your requests using double click in the Explorer or specifying request file name only in the command line
