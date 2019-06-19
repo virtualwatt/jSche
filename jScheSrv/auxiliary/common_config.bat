@@ -48,7 +48,8 @@ set KEY="HKLM\SOFTWARE\JavaSoft\Java Runtime Environment"
 set VALUE=CurrentVersion
 reg query %KEY% /v %VALUE% >nul 2>nul || (
 	echo JRE not installed 
-	exit /b 1
+	call :REGISTRY_METHOD_JDK
+	goto :EOF
 )
 set JRE_VERSION=
 for /f "tokens=2,*" %%a in ('reg query %KEY% /v %VALUE% ^| findstr %VALUE%') do (
@@ -58,7 +59,7 @@ for /f "tokens=2,*" %%a in ('reg query %KEY% /v %VALUE% ^| findstr %VALUE%') do 
 set KEY="HKLM\SOFTWARE\JavaSoft\Java Runtime Environment\%JRE_VERSION%"
 set VALUE=JavaHome
 reg query %KEY% /v %VALUE% >nul 2>nul || (
-	echo JavaHome not installed
+	echo JRE JavaHome not installed
 	exit /b 1
 )
 set JAVA_HOME=
@@ -76,6 +77,33 @@ for /f "tokens=2,*" %%a in ('reg query %KEY% /v %VALUE% ^| findstr %VALUE%') do 
 	set JVM_DLL=%%b
 )
 ::echo RuntimeLib: %JVM_DLL%
+set KEY=
+set VALUE=
+goto :EOF
+
+:REGISTRY_METHOD_JDK
+set KEY="HKLM\SOFTWARE\JavaSoft\Java Development Kit"
+set VALUE=CurrentVersion
+reg query %KEY% /v %VALUE% >nul 2>nul || (
+	echo JDK not installed
+	exit /b 1
+)
+set JDK_VERSION=
+for /f "tokens=2,*" %%a in ('reg query %KEY% /v %VALUE% ^| findstr %VALUE%') do (
+	set JDK_VERSION=%%b
+)
+::echo JRE VERSION: %JRE_VERSION%
+set KEY="HKLM\SOFTWARE\JavaSoft\Java Development Kit\%JDK_VERSION%"
+set VALUE=JavaHome
+reg query %KEY% /v %VALUE% >nul 2>nul || (
+	echo JDK JavaHome not installed
+	exit /b 1
+)
+set JAVA_HOME=
+for /f "tokens=2,*" %%a in ('reg query %KEY% /v %VALUE% ^| findstr %VALUE%') do (
+	set JAVA_HOME=%%b
+)
+::echo JavaHome: %JAVA_HOME%
 set KEY=
 set VALUE=
 goto :EOF
