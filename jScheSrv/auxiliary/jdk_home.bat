@@ -2,7 +2,7 @@
 set KEY="HKLM\SOFTWARE\JavaSoft\Java Development Kit"
 set VALUE=CurrentVersion
 reg query %KEY% /v %VALUE% >nul 2>nul || (
-	echo Oracle JDK not found, tying Zulu...
+	echo Oracle JDK not found, trying Zulu...
 	goto zulu
 )
 echo Oracle JDK detected
